@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon --exec ts-node ./src/app.ts",
+    "dev": "env-cmd -f ./config/.env nodemon --exec ts-node ./src/app.ts",
     "build": "tsc"
   },
   "keywords": [],
@@ -17,6 +17,7 @@
     "@types/jsonwebtoken": "^8.5.0",
     "@types/mongoose": "^5.7.36",
     "@types/node": "^14.0.27",
+    "env-cmd": "^10.1.0",
     "nodemon": "^2.0.4",
     "ts-node": "^8.10.2",
     "typescript": "^3.9.7"
