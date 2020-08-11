@@ -21,6 +21,12 @@ const userSchema = new Schema({
   password: { type: String, trim: true, required: true },
 });
 
+userSchema.methods.toJSON = function () {
+  const userObject = this.toObject();
+  delete userObject["__v"];
+  return userObject;
+};
+
 userSchema.pre<IUser>("save", async function (
   next: HookNextFunction
 ): Promise<void> {
