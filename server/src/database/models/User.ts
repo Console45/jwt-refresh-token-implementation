@@ -47,6 +47,8 @@ userSchema.methods.toJSON = function () {
   delete userObject["__v"];
   delete userObject["_id"];
   delete userObject["password"];
+  delete userObject["tokenVersion"];
+  delete userObject["accessTokens"];
   return userObject;
 };
 
