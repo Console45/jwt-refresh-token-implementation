@@ -34,23 +34,34 @@ router.post("/users/login", async ({ body }: Request, res: Response) => {
       accessToken,
     });
   } catch (err) {
-    console.log(err);
     res.status(404).send(err);
   }
 });
 
 router.post("/user/me/logout", auth, async (req: any, res: Response) => {
   try {
-    const isRevoked: boolean = await revokeRefreshTokens(req.user._id);
+    res.clearCookie("jid");
     req.user.accessTokens = req.user.accessTokens.filter(
       (token: any) => token.token !== req.accessToken
     );
     await req.user.save();
     res.send({
-      message: "Logout",
-      isRevoked,
+      message: "Logged out",
     });
   } catch (err) {
-    res.status(500).send({ err, isRevoked: false });
+    res.status(500).send({ err });
+  }
+});
+
+router.post("/user/me/logout_all", auth, async (req: any, res: Response) => {
+  try {
+    res.clearCookie("jid");
+    req.user.accessTokens = [];
+    await req.user.save();
+    res.send({
+      message: "logged out from all devices",
+    });
+  } catch (err) {
+    res.status(500).send({ err });
   }
 });

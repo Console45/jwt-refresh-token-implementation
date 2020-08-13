@@ -37,7 +37,6 @@ app.post("/refresh_token", async (req: any, res: Response) => {
   try {
     payload = verify(token, process.env.JWT_REFRESH_TOKEN_SECRET!);
   } catch (err) {
-    console.error(err);
     return res.status(401).send({ ok: false, accessToken: "" });
   }
   const user: IUser | null = await User.findOne({ _id: payload.userId });

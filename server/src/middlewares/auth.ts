@@ -21,6 +21,5 @@ export const auth = async (
     next();
   } catch (err) {
     res.status(401).send({ error: "not authenticated" });
-    console.error(err);
   }
 };
