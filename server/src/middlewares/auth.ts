@@ -14,8 +14,10 @@ export const auth = async (
       _id: (payload as any).userId,
       ["accessTokens.token"]: token,
     });
+
     if (!user) throw new Error();
     req.user = user;
+    req.accessToken = token;
     next();
   } catch (err) {
     res.status(401).send({ error: "not authenticated" });
