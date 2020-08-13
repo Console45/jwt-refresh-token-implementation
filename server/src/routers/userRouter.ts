@@ -41,10 +41,10 @@ router.post("/users/login", async ({ body }: Request, res: Response) => {
 
 router.post("/user/me/logout", auth, async (req: any, res: Response) => {
   try {
+    const isRevoked: boolean = await revokeRefreshTokens(req.user._id);
     req.user.accessTokens = req.user.accessTokens.filter(
       (token: any) => token.token !== req.accessToken
     );
-    const isRevoked: boolean = await revokeRefreshTokens(req.user._id);
     await req.user.save();
     res.send({
       message: "Logout",
