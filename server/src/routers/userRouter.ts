@@ -1,5 +1,4 @@
 import { Response, Request, Router } from "express";
-import { revokeRefreshTokens } from "../utils/revokeRefreshTokens";
 import { sendRefreshToken } from "../utils/sendRefreshToken";
 import User, { IUser } from "../database/models/User";
 import { auth } from "../middlewares/auth";
