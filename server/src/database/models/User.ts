@@ -11,6 +11,7 @@ export interface IUser extends Document {
   name: string;
   password: string;
   accessTokens: Token[];
+  tokenVersion: number;
   createAccessToken: () => Promise<string>;
   createRefreshToken: () => string;
 }
@@ -35,6 +36,10 @@ const userSchema: Schema = new Schema({
       },
     },
   ],
+  tokenVersion: {
+    type: Number,
+    default: 0,
+  },
 });
 
 userSchema.methods.toJSON = function () {
@@ -69,7 +74,7 @@ userSchema.methods.createAccessToken = async function (this: IUser) {
 
 userSchema.methods.createRefreshToken = function () {
   const refreshToken: string = sign(
-    { userId: this._id.toString() },
+    { userId: this._id.toString(), tokenVersion: this.tokenVersion },
     process.env.JWT_REFRESH_TOKEN_SECRET!,
     { expiresIn: "7d" }
   );

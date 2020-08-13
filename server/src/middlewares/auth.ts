@@ -2,7 +2,11 @@ import User, { IUser } from "./../database/models/User";
 import { verify } from "jsonwebtoken";
 import { Response, NextFunction } from "express";
 
-export const auth = async (req: any, res: Response, next: NextFunction) => {
+export const auth = async (
+  req: any,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
   try {
     const token: string = req.header("Authorization")!.replace("Bearer ", "");
     const payload = verify(token, process.env.JWT_ACCESS_TOKEN_SECRET!);
