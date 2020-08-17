@@ -22,12 +22,6 @@ app.get("/", (req: Request, res: Response) => {
   });
 });
 
-app.get("/bye", auth, (req: Request, res: Response) => {
-  res.send({
-    content: "bye, hope you liked it. See you soon",
-  });
-});
-
 app.use(userRouter);
 
 app.post("/refresh_token", async (req: any, res: Response) => {
