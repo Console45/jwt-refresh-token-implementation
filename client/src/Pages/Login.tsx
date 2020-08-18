@@ -1,6 +1,6 @@
 import React, { FC, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { useLoginUser } from "../hooks/useLoginUser";
+import { LoginUserResponse, useLoginUser } from "../hooks/useLoginUser";
 
 interface LoginProps {}
 
@@ -17,7 +17,12 @@ export const Login: FC<LoginProps> = () => {
         <form
           onSubmit={async (e) => {
             e.preventDefault();
-            const { data, error, login, accessToken } = await loginUser({
+            const {
+              data,
+              error,
+              login,
+              accessToken,
+            }: LoginUserResponse = await loginUser({
               email,
               password,
             });
