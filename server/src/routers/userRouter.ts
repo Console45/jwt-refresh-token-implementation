@@ -9,6 +9,15 @@ router.get("/user/me", auth, (req: any, res: Response) => {
   res.send(req.user);
 });
 
+router.get("/users", async (req: Request, res: Response) => {
+  try {
+    const users: IUser[] = await User.find({});
+    res.send(users);
+  } catch (err) {
+    res.status(500).send({ error: err });
+  }
+});
+
 router.post("/users", async ({ body }: Request, res: Response) => {
   try {
     const user: IUser = new User(body);
