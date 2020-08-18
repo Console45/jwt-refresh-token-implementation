@@ -14,12 +14,14 @@ router.post("/users", async ({ body }: Request, res: Response) => {
     const user: IUser = new User(body);
     await user.save();
     sendRefreshToken(res, user.createRefreshToken());
+    const accessToken = await user.createAccessToken();
     res.status(201).send({
+      register: true,
       user,
-      accessToken: user.createAccessToken(),
+      accessToken,
     });
   } catch (err) {
-    res.status(500).send(err);
+    res.status(500).send({ error: err, register: false });
   }
 });
 
@@ -29,11 +31,12 @@ router.post("/users/login", async ({ body }: Request, res: Response) => {
     sendRefreshToken(res, user.createRefreshToken());
     const accessToken = await user.createAccessToken();
     res.send({
+      login: true,
       user,
       accessToken,
     });
   } catch (err) {
-    res.status(404).send(err);
+    res.status(404).send({ error: err, login: false });
   }
 });
 
@@ -45,10 +48,11 @@ router.post("/user/me/logout", auth, async (req: any, res: Response) => {
     );
     await req.user.save();
     res.send({
-      message: "Logged out",
+      message: "logged out",
+      logout: true,
     });
   } catch (err) {
-    res.status(500).send({ err });
+    res.status(500).send({ error: err, logout: false });
   }
 });
 
@@ -59,8 +63,9 @@ router.post("/user/me/logout_all", auth, async (req: any, res: Response) => {
     await req.user.save();
     res.send({
       message: "logged out from all devices",
+      logout: true,
     });
   } catch (err) {
-    res.status(500).send({ err });
+    res.status(500).send({ error: err, logout: false });
   }
 });

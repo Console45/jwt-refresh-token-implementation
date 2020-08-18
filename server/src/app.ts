@@ -4,7 +4,6 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import { verify } from "jsonwebtoken";
 import { connection } from "./database/dbConnection";
-import { auth } from "./middlewares/auth";
 import { router as userRouter } from "./routers/userRouter";
 import { sendRefreshToken } from "./utils/sendRefreshToken";
 import User, { IUser } from "./database/models/User";
@@ -12,7 +11,7 @@ import { revokeRefreshTokens } from "./utils/revokeRefreshTokens";
 
 // app config
 const app: Application = express();
-app.use(cors({ origin: "https://localhost:3000", credentials: true }));
+app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 app.use(cookieParser());
 app.use(bodyParser.json());
 
