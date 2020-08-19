@@ -14,7 +14,7 @@ router.get("/users", async (req: Request, res: Response) => {
     const users: IUser[] = await User.find({});
     res.send(users);
   } catch (err) {
-    res.status(500).send({ error: err });
+    res.status(500).send({ error: err.message });
   }
 });
 
@@ -30,7 +30,7 @@ router.post("/users", async ({ body }: Request, res: Response) => {
       accessToken,
     });
   } catch (err) {
-    res.status(500).send({ error: err, register: false });
+    res.status(500).send({ error: err.message, register: false });
   }
 });
 
@@ -45,7 +45,7 @@ router.post("/users/login", async ({ body }: Request, res: Response) => {
       accessToken,
     });
   } catch (err) {
-    res.status(404).send({ error: err, login: false });
+    res.status(404).send({ error: err.message, login: false });
   }
 });
 
@@ -61,7 +61,7 @@ router.post("/user/me/logout", auth, async (req: any, res: Response) => {
       logout: true,
     });
   } catch (err) {
-    res.status(500).send({ error: err, logout: false });
+    res.status(500).send({ error: err.message, logout: false });
   }
 });
 
@@ -75,6 +75,6 @@ router.post("/user/me/logout_all", auth, async (req: any, res: Response) => {
       logout: true,
     });
   } catch (err) {
-    res.status(500).send({ error: err, logout: false });
+    res.status(500).send({ error: err.message, logout: false });
   }
 });
