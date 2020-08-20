@@ -14,10 +14,10 @@
     "axios": "^0.19.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-query": "^2.5.7-tsnext.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",
-    "swr": "^0.3.0",
-    "typescript": "~3.7.2"
+    "typescript": "3.9.7"
   },
   "scripts": {
     "start": "react-scripts start",
