@@ -1,3 +1,5 @@
+import { setAccessToken } from "./../acessToken";
+import { MutationFunction, queryCache, useMutation } from "react-query";
 import axios from "axios";
 
 interface NewUser {
@@ -6,35 +8,30 @@ interface NewUser {
   password: string;
 }
 
-export interface CreateUserResponse {
-  data?: any;
-  accessToken?: string;
-  error?: any;
-  register: boolean;
+interface CreateUserResponse {
+  error: boolean;
+  loading: boolean;
+  success: boolean;
+  mutate: MutationFunction<any, NewUser>;
 }
-type CreateUser = (newUser: NewUser) => Promise<CreateUserResponse>;
 
-export const useCreateUser = (): CreateUser => {
-  const createUser: CreateUser = async (newUser) => {
-    try {
-      const res = await axios.post("/users", newUser);
-      return {
-        data: res.data.user,
-        register: res.data.register,
-        accessToken: res.data.accessToken,
-      };
-    } catch (error) {
-      if (error.response) {
-        return {
-          error: error.response.data.error,
-          register: error.response.data.register,
-        };
-      }
-      return {
-        error: error.message,
-        register: false,
-      };
-    }
+export const useCreateUser = (): CreateUserResponse => {
+  const createUser = async (variables: NewUser) => {
+    const { data } = await axios.post("/users", variables);
+    return data;
   };
-  return createUser;
+
+  const [mutate, { isLoading, isError, isSuccess }] = useMutation(createUser, {
+    onSuccess: ({ accessToken }) => {
+      setAccessToken(accessToken);
+      queryCache.invalidateQueries("users");
+    },
+  });
+
+  return {
+    error: isError,
+    success: isSuccess,
+    loading: isLoading,
+    mutate,
+  };
 };

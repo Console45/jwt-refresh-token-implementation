@@ -15,6 +15,7 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-query": "^2.5.7-tsnext.1",
+    "react-query-devtools": "^2.4.3",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",
     "typescript": "3.9.7"

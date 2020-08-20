@@ -1,14 +1,19 @@
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { LoginUserResponse, useLoginUser } from "../hooks/useLoginUser";
+import { useLoginUser } from "../hooks/useLoginUser";
 
 interface LoginProps {}
 
 export const Login: FC<LoginProps> = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const loginUser = useLoginUser();
+  const { mutate, error, loading, success } = useLoginUser();
+
   const history = useHistory();
+
+  useEffect(() => {
+    if (success) history.push("/user");
+  }, [success, history]);
 
   return (
     <div>
@@ -17,24 +22,11 @@ export const Login: FC<LoginProps> = () => {
         <form
           onSubmit={async (e) => {
             e.preventDefault();
-            const {
-              data,
-              error,
-              login,
-              accessToken,
-            }: LoginUserResponse = await loginUser({
-              email,
-              password,
-            });
-            console.log(data);
-            console.log(error);
-            console.log(login);
-            console.log(accessToken);
-
-            history.push("/");
+            await mutate({ email, password });
           }}
         >
-          <div></div>
+          <div>{error && <p>Failed</p>}</div>
+
           <div>
             <input
               type="email"
@@ -51,7 +43,7 @@ export const Login: FC<LoginProps> = () => {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-          <button>Submit</button>
+          <button disabled={loading}>{loading ? "loading.." : "submit"}</button>
         </form>
       </div>
     </div>

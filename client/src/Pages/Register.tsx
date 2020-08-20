@@ -1,7 +1,6 @@
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { mutate } from "swr";
-import { CreateUserResponse, useCreateUser } from "../hooks/useCreateUser";
+import { useCreateUser } from "../hooks/useCreateUser";
 
 interface RegisterProps {}
 
@@ -9,8 +8,13 @@ export const Register: FC<RegisterProps> = () => {
   const [email, setEmail] = useState<string>("");
   const [name, setName] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const createUser = useCreateUser();
+  const { mutate, error, loading, success } = useCreateUser();
+
   const history = useHistory();
+
+  useEffect(() => {
+    if (success) history.push("/user");
+  }, [success, history]);
 
   return (
     <div>
@@ -18,23 +22,11 @@ export const Register: FC<RegisterProps> = () => {
       <form
         onSubmit={async (e) => {
           e.preventDefault();
-          console.log("form submitted");
-          const {
-            data,
-            accessToken,
-            error,
-          }: CreateUserResponse = await createUser({
-            name,
-            email,
-            password,
-          });
-          history.push("/");
-          console.log(error);
-          console.log(data);
-          console.log(accessToken);
-          mutate("/users");
+          await mutate({ name, email, password });
         }}
       >
+        <div>{error && <p>Failed</p>}</div>
+
         <div>
           <input
             type="text"
@@ -59,7 +51,7 @@ export const Register: FC<RegisterProps> = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
-        <button>Submit</button>
+        <button disabled={loading}>{loading ? "loading.." : "submit"}</button>
       </form>
     </div>
   );

@@ -1,32 +1,26 @@
 import React, { FC } from "react";
-import axios from "axios";
-import useSWR from "swr";
+import { useUsers } from "../hooks/useUsers";
 
 export const Home: FC<{}> = () => {
-  const fetcher = async (url: string) => {
-    const res = await axios.get(url);
-    return res.data;
-  };
-  const { data: users, error } = useSWR("/users", fetcher);
-
   interface User {
     name: string;
     email: string;
   }
+  const { users, error, loading } = useUsers();
 
-  const isLoading = !users && !error;
-  return isLoading ? (
-    <div>loading...</div>
-  ) : (
+  if (loading) return <div>loading....</div>;
+  if (error) return <div>{error.message}</div>;
+  return (
     <div>
-      <div>Home Page</div>
-      {users.map((user: User) => (
-        <div key={user.email}>
-          <span>name: </span> <span> {user.name}</span>
-          <br />
-          <span>email: </span> <span> {user.email}</span>
-        </div>
-      ))}
+      {users.map((user: User) => {
+        return (
+          <div key={user.email}>
+            <span>{user.name}</span>
+            <br />
+            <span>{user.email}</span>
+          </div>
+        );
+      })}
     </div>
   );
 };

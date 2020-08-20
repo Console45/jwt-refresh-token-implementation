@@ -1,39 +1,33 @@
+import { setAccessToken } from "./../acessToken";
 import axios from "axios";
+import { MutationFunction, useMutation } from "react-query";
 
 interface User {
   email: string;
   password: string;
 }
-
-export interface LoginUserResponse {
-  data?: any;
-  accessToken?: string;
-  error?: any;
-  login: boolean;
+interface LoginUserResponse {
+  error: boolean;
+  success: boolean;
+  loading: boolean;
+  mutate: MutationFunction<any, User>;
 }
-type LoginUser = (user: User) => Promise<LoginUserResponse>;
 
-export const useLoginUser = (): LoginUser => {
-  const loginUser: LoginUser = async (user: User) => {
-    try {
-      const res = await axios.post("/users/login", user);
-      return {
-        data: res.data.user,
-        accessToken: res.data.accessToken,
-        login: res.data.login,
-      };
-    } catch (error) {
-      if (error.response) {
-        return {
-          error: error.response.data.error,
-          login: error.response.data.login,
-        };
-      }
-      return {
-        error: error.message,
-        login: false,
-      };
-    }
+export const useLoginUser = (): LoginUserResponse => {
+  const loginUser = async (variables: User) => {
+    const { data } = await axios.post("/users/login", variables);
+    return data;
   };
-  return loginUser;
+  const [mutate, { isLoading, isError, isSuccess }] = useMutation(loginUser, {
+    onSuccess: ({ accessToken }) => {
+      setAccessToken(accessToken);
+    },
+  });
+
+  return {
+    error: isError,
+    success: isSuccess,
+    loading: isLoading,
+    mutate,
+  };
 };

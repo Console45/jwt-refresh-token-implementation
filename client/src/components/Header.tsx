@@ -21,6 +21,11 @@ export const Header: FC<HeaderProps> = () => {
           Login
         </NavLink>
       </div>
+      <div>
+        <NavLink activeStyle={{ color: "red" }} to="/user">
+          Profile
+        </NavLink>
+      </div>
     </div>
   );
 };
