@@ -12,7 +12,9 @@ export const useUsers = (): UseUsersResponse => {
     return data;
   };
 
-  const { isLoading, data: users, error } = useQuery("users", fetchUsers);
+  const { isLoading, data: users, error } = useQuery("users", fetchUsers, {
+    retry: 1,
+  });
 
   return {
     users,

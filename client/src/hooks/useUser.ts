@@ -17,7 +17,8 @@ export const useUser = (): UseUserResponse => {
   };
   const { data: user, error, isLoading } = useQuery(
     ["user", accessToken],
-    fetchUser
+    fetchUser,
+    { refetchOnMount: true, retry: 0 }
   );
 
   return {

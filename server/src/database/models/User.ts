@@ -67,7 +67,7 @@ userSchema.methods.createAccessToken = async function (this: IUser) {
   const accessToken: string = sign(
     { userId: this._id.toString() },
     process.env.JWT_ACCESS_TOKEN_SECRET!,
-    { expiresIn: "15m" }
+    { expiresIn: "10s" }
   );
   this.accessTokens.push({ token: accessToken });
   await this.save();
