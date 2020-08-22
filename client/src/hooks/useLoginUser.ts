@@ -21,7 +21,7 @@ export const useLoginUser = (): LoginUserResponse => {
   const [mutate, { isLoading, isError, isSuccess }] = useMutation(loginUser, {
     onSuccess: ({ accessToken }) => {
       setAccessToken(accessToken);
-      // queryCache.invalidateQueries("user");
+      queryCache.invalidateQueries("user");
     },
   });
 
