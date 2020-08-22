@@ -51,7 +51,7 @@ router.post("/users/login", async ({ body }: Request, res: Response) => {
 
 router.post("/user/me/logout", auth, async (req: any, res: Response) => {
   try {
-    res.clearCookie("jid");
+    sendRefreshToken(res, "");
     req.user.accessTokens = req.user.accessTokens.filter(
       (token: any) => token.token !== req.accessToken
     );
@@ -67,7 +67,7 @@ router.post("/user/me/logout", auth, async (req: any, res: Response) => {
 
 router.post("/user/me/logout_all", auth, async (req: any, res: Response) => {
   try {
-    res.clearCookie("jid");
+    sendRefreshToken(res, "");
     req.user.accessTokens = [];
     await req.user.save();
     res.send({
