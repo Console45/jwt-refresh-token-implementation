@@ -1,11 +1,13 @@
 import React, { FC } from "react";
 import { NavLink } from "react-router-dom";
+import { useLogoutUser } from "../hooks/useLogout";
 import { useUser } from "../hooks/useUser";
 
 interface HeaderProps {}
 
 export const Header: FC<HeaderProps> = () => {
   const { user, loading } = useUser();
+  const { mutate, loading: isLoading } = useLogoutUser();
   let body: any = null;
   if (loading) {
     body = null;
@@ -33,6 +35,18 @@ export const Header: FC<HeaderProps> = () => {
         <NavLink activeStyle={{ color: "red" }} to="/user">
           Profile
         </NavLink>
+      </div>
+      <div>
+        {!loading && user ? (
+          <button
+            onClick={async () => {
+              await mutate(null);
+            }}
+            disabled={isLoading}
+          >
+            {isLoading ? "loading..." : " logout"}
+          </button>
+        ) : null}
       </div>
       {body}
     </div>
