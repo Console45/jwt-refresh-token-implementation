@@ -10,11 +10,15 @@ export const App: FC<AppProps> = () => {
 
   useEffect(() => {
     const refreshToken = async () => {
-      const { data } = await axios.post("/refresh_token");
-      setAccessToken(data.accessToken);
+      try {
+        const { data } = await axios.post("/refresh_token");
+        setAccessToken(data.accessToken);
+        setLoading(false);
+      } catch (err) {
+        setLoading(false);
+      }
     };
     refreshToken();
-    setLoading(false);
   }, []);
 
   if (loading) {

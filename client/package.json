@@ -12,7 +12,7 @@
     "@types/react-dom": "^16.9.0",
     "@types/react-router-dom": "^5.1.5",
     "axios": "^0.19.2",
-    "jwt-decode": "^2.2.0",
+    "axios-auth-refresh": "^2.2.8",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-query": "^2.5.7-tsnext.1",
@@ -43,7 +43,6 @@
     ]
   },
   "devDependencies": {
-    "@types/axios": "^0.14.0",
-    "@types/jwt-decode": "^2.2.1"
+    "@types/axios": "^0.14.0"
   }
 }

@@ -1,6 +1,5 @@
 import { useQuery } from "react-query";
 import axios from "axios";
-import { getAccessToken } from "../acessToken";
 
 interface UseUserResponse {
   user: any;
@@ -8,18 +7,14 @@ interface UseUserResponse {
   loading: boolean;
 }
 export const useUser = (): UseUserResponse => {
-  const accessToken = getAccessToken();
-  const fetchUser = async (key: string, accessToken: string) => {
-    const res = await axios.get("/user/me", {
-      headers: { Authorization: `Bearer ${accessToken}` },
-    });
+  const fetchUser = async (key: string) => {
+    const res = await axios.get("/user/me");
     return res.data;
   };
-  const { data: user, error, isLoading } = useQuery(
-    ["user", accessToken],
-    fetchUser,
-    { refetchOnMount: true, retry: 0 }
-  );
+  const { data: user, error, isLoading } = useQuery("user", fetchUser, {
+    refetchOnMount: true,
+    retry: 0,
+  });
 
   return {
     user,
