@@ -1,6 +1,6 @@
 import { setAccessToken } from "./../acessToken";
 import axios from "axios";
-import { MutationFunction, useMutation } from "react-query";
+import { MutationFunction, queryCache, useMutation } from "react-query";
 
 interface User {
   email: string;
@@ -21,6 +21,7 @@ export const useLoginUser = (): LoginUserResponse => {
   const [mutate, { isLoading, isError, isSuccess }] = useMutation(loginUser, {
     onSuccess: ({ accessToken }) => {
       setAccessToken(accessToken);
+      // queryCache.invalidateQueries("user");
     },
   });
 

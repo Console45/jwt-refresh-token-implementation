@@ -1,9 +1,17 @@
 import React, { FC } from "react";
 import { NavLink } from "react-router-dom";
+import { useUser } from "../hooks/useUser";
 
 interface HeaderProps {}
 
 export const Header: FC<HeaderProps> = () => {
+  const { user, loading } = useUser();
+  let body: any = null;
+  if (loading) {
+    body = null;
+  } else if (user) {
+    body = <div>you are logged in as {user.name} </div>;
+  } else body = <div>not logged in</div>;
   return (
     <div>
       <div>
@@ -26,6 +34,7 @@ export const Header: FC<HeaderProps> = () => {
           Profile
         </NavLink>
       </div>
+      {body}
     </div>
   );
 };

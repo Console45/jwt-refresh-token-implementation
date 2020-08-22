@@ -15,7 +15,7 @@ export const Profile: FC<ProfileProps> = () => {
   }
   return (
     <div>
-      <div>My user Profile</div>;
+      <div>My user Profile</div>
       {user && (
         <div>
           <span>name: </span> <span> {user.name}</span>

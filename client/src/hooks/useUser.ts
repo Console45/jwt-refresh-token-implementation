@@ -8,8 +8,12 @@ interface UseUserResponse {
 }
 export const useUser = (): UseUserResponse => {
   const fetchUser = async (key: string) => {
-    const res = await axios.get("/user/me");
-    return res.data;
+    try {
+      const res = await axios.get("/user/me");
+      return res.data;
+    } catch (err) {
+      return;
+    }
   };
   const { data: user, error, isLoading } = useQuery("user", fetchUser, {
     refetchOnMount: true,
