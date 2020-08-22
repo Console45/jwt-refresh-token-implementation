@@ -32,9 +32,11 @@ export const Header: FC<HeaderProps> = () => {
         </NavLink>
       </div>
       <div>
-        <NavLink activeStyle={{ color: "red" }} to="/user">
-          Profile
-        </NavLink>
+        {!loading && user && (
+          <NavLink activeStyle={{ color: "red" }} to="/user">
+            Profile
+          </NavLink>
+        )}
       </div>
       <div>
         {!loading && user ? (
