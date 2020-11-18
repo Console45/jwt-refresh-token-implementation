@@ -27,24 +27,17 @@ router.post("/refresh_token", async (req: any, res: Response) => {
   return res.send({ ok: true, accessToken });
 });
 
-router.post("/revoke_user", async ({ body }: Request, res: Response) => {
-  const user: IUser | null = await User.findOne({ email: body.email });
-  let isRevoked: boolean = false;
-  if (user) {
-    const revokeToken = new RevokeToken(user._id);
-    isRevoked = await revokeToken.refreshToken();
-  }
-  res.send({ isRevoked });
-});
-router.post(
-  "/revoke_resetPasswordToken",
-  async ({ body }: Request, res: Response) => {
+router.post("/forgot_password", async ({ body }: Request, res: Response) => {
+  try {
     const user: IUser | null = await User.findOne({ email: body.email });
-    let isRevoked: boolean = false;
-    if (user) {
-      const revokeToken = new RevokeToken(user._id);
-      isRevoked = await revokeToken.resetPasswordToken();
-    }
-    res.send({ isRevoked });
+    if (!user) return res.status(404).send({ error: "account does not exist" });
+    const revoke = new RevokeToken(user._id);
+    const isRevoked: boolean = await revoke.refreshToken();
+    if (!isRevoked) return res.status(500).send({ revoked: false });
+    const token: string = user.createResetPasswordToken();
+    // await sendResetPasswordEmail(user.email, user.fullname, token);
+    res.send({ revoked: true, success: true, token });
+  } catch (err) {
+    res.status(500).send({ error: err.message, success: false });
   }
-);
+});
