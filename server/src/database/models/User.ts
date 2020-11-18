@@ -18,9 +18,10 @@ export interface IUser extends Document {
   role: Role;
   accessTokens: Token[];
   refreshTokenVersion: number;
-  resetPasswordtokenVersion: number;
+  resetPasswordTokenVersion: number;
   createAccessToken: () => Promise<string>;
   createRefreshToken: () => string;
+  createResetPasswordToken: () => string;
 }
 
 const userSchema: Schema = new Schema({
@@ -49,7 +50,7 @@ const userSchema: Schema = new Schema({
       },
     },
   ],
-  resetPasswordtokenVersion: {
+  resetPasswordTokenVersion: {
     type: Number,
     default: 0,
   },
@@ -98,6 +99,18 @@ userSchema.methods.createRefreshToken = function () {
     { expiresIn: "7d" }
   );
   return refreshToken;
+};
+
+userSchema.methods.createResetPasswordToken = function (this: IUser) {
+  const resetPasswordToken: string = sign(
+    {
+      userId: this._id.toString(),
+      tokenVersion: this.resetPasswordTokenVersion,
+    },
+    process.env.RESET_PASSWORD_TOKEN_SECRET!,
+    { expiresIn: "30m" }
+  );
+  return resetPasswordToken;
 };
 
 export interface IUserModel extends Model<IUser> {
