@@ -9,7 +9,7 @@ export class RevokeToken {
     try {
       await User.findOneAndUpdate(
         { _id: this.userId },
-        { $inc: { tokenVersion: 1 } }
+        { $inc: { refreshTokenVersion: 1 } }
       );
       return true;
     } catch (err) {
@@ -20,7 +20,7 @@ export class RevokeToken {
     try {
       await User.findOneAndUpdate(
         { _id: this.userId },
-        { $inc: { resetPasswordTokenVersion: 1 } }
+        { $inc: { resetPasswordtokenVersion: 1 } }
       );
       return true;
     } catch (err) {
