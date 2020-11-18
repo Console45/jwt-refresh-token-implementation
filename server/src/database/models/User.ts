@@ -17,7 +17,8 @@ export interface IUser extends Document {
   password: string;
   role: Role;
   accessTokens: Token[];
-  tokenVersion: number;
+  refreshTokenVersion: number;
+  resetPasswordtokenVersion: number;
   createAccessToken: () => Promise<string>;
   createRefreshToken: () => string;
 }
@@ -48,7 +49,11 @@ const userSchema: Schema = new Schema({
       },
     },
   ],
-  tokenVersion: {
+  resetPasswordtokenVersion: {
+    type: Number,
+    default: 0,
+  },
+  refreshTokenVersion: {
     type: Number,
     default: 0,
   },
