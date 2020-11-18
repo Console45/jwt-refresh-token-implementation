@@ -24,7 +24,7 @@ export interface IUser extends Document {
   createResetPasswordToken: () => string;
 }
 
-const userSchema: Schema = new Schema({
+const userSchema: Schema<IUser> = new Schema<IUser>({
   name: { type: String, trim: true, required: true },
   email: {
     type: String,
@@ -60,7 +60,7 @@ const userSchema: Schema = new Schema({
   },
 });
 
-userSchema.methods.toJSON = function () {
+userSchema.methods.toJSON = function (this: IUser): any {
   const userObject = this.toObject();
   delete userObject["__v"];
   delete userObject["password"];
@@ -73,7 +73,7 @@ userSchema.methods.toJSON = function () {
 userSchema.statics.findByCredentials = async (
   email: string,
   password: string
-) => {
+): Promise<IUser> => {
   const user: IUser | null = await User.findOne({ email });
   if (!user) throw new Error("email is incorrect");
   const isMatch = await compare(password, user.password);
@@ -81,7 +81,9 @@ userSchema.statics.findByCredentials = async (
   return user;
 };
 
-userSchema.methods.createAccessToken = async function (this: IUser) {
+userSchema.methods.createAccessToken = async function (
+  this: IUser
+): Promise<string> {
   const accessToken: string = sign(
     { userId: this._id.toString() },
     process.env.JWT_ACCESS_TOKEN_SECRET!,
@@ -92,16 +94,16 @@ userSchema.methods.createAccessToken = async function (this: IUser) {
   return accessToken;
 };
 
-userSchema.methods.createRefreshToken = function () {
+userSchema.methods.createRefreshToken = function (this: IUser): string {
   const refreshToken: string = sign(
-    { userId: this._id.toString(), tokenVersion: this.tokenVersion },
+    { userId: this._id.toString(), tokenVersion: this.refreshTokenVersion },
     process.env.JWT_REFRESH_TOKEN_SECRET!,
     { expiresIn: "7d" }
   );
   return refreshToken;
 };
 
-userSchema.methods.createResetPasswordToken = function (this: IUser) {
+userSchema.methods.createResetPasswordToken = function (this: IUser): string {
   const resetPasswordToken: string = sign(
     {
       userId: this._id.toString(),
