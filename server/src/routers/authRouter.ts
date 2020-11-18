@@ -7,21 +7,6 @@ import { sendRefreshToken } from "../utils/sendRefreshToken";
 
 export const router: Router = Router();
 
-router.post("/user/login", async ({ body }: Request, res: Response) => {
-  try {
-    const user: IUser = await User.findByCredentials(body.email, body.password);
-    sendRefreshToken(res, user.createRefreshToken());
-    const accessToken = await user.createAccessToken();
-    res.send({
-      login: true,
-      user,
-      accessToken,
-    });
-  } catch (err) {
-    res.status(404).send({ error: err.message, login: false });
-  }
-});
-
 router.post("/refresh_token", async (req: any, res: Response) => {
   const token: string = req.cookies.jid;
   if (!token) return res.status(401).send({ ok: false, accessToken: "" });
