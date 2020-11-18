@@ -9,16 +9,7 @@ router.get("/user/me", auth, (req: any, res: Response) => {
   res.send(req.user);
 });
 
-router.get("/users", async (req: Request, res: Response) => {
-  try {
-    const users: IUser[] = await User.find({});
-    res.send(users);
-  } catch (err) {
-    res.status(500).send({ error: err.message });
-  }
-});
-
-router.post("/users", async ({ body }: Request, res: Response) => {
+router.post("/user/register", async ({ body }: Request, res: Response) => {
   try {
     const user: IUser = new User(body);
     await user.save();
@@ -34,7 +25,7 @@ router.post("/users", async ({ body }: Request, res: Response) => {
   }
 });
 
-router.post("/users/login", async ({ body }: Request, res: Response) => {
+router.post("/user/login", async ({ body }: Request, res: Response) => {
   try {
     const user: IUser = await User.findByCredentials(body.email, body.password);
     sendRefreshToken(res, user.createRefreshToken());
