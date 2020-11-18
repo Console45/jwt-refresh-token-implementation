@@ -6,7 +6,6 @@ export class RevokeToken {
     this.userId = userId;
   }
   async refreshToken(): Promise<boolean> {
-    console.log(this.userId);
     try {
       await User.findOneAndUpdate(
         { _id: this.userId },
