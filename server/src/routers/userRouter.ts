@@ -34,21 +34,6 @@ router.post("/users", async ({ body }: Request, res: Response) => {
   }
 });
 
-router.post("/users/login", async ({ body }: Request, res: Response) => {
-  try {
-    const user: IUser = await User.findByCredentials(body.email, body.password);
-    sendRefreshToken(res, user.createRefreshToken());
-    const accessToken = await user.createAccessToken();
-    res.send({
-      login: true,
-      user,
-      accessToken,
-    });
-  } catch (err) {
-    res.status(404).send({ error: err.message, login: false });
-  }
-});
-
 router.post("/user/me/logout", auth, async (req: any, res: Response) => {
   try {
     sendRefreshToken(res, "");
