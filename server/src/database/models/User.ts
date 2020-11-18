@@ -6,10 +6,16 @@ import { sign } from "jsonwebtoken";
 interface Token {
   token: string;
 }
+
+export enum Role {
+  Admin = "Admin",
+  User = "User",
+}
 export interface IUser extends Document {
   email: string;
   name: string;
   password: string;
+  role: Role;
   accessTokens: Token[];
   tokenVersion: number;
   createAccessToken: () => Promise<string>;
@@ -28,6 +34,12 @@ const userSchema: Schema = new Schema({
     },
   },
   password: { type: String, trim: true, required: true },
+  role: {
+    type: String,
+    trim: true,
+    required: true,
+    enum: ["User", "Admin"],
+  },
   accessTokens: [
     {
       token: {
