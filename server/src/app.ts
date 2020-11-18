@@ -24,7 +24,7 @@ app.use(authRouter);
 const main = async (): Promise<void> => {
   await connection();
   console.log("mongodb connected");
-  app.listen(4000, () => console.log("server is listening"));
+  app.listen(process.env.PORT, () => console.log("server is listening"));
 };
 
 main();
