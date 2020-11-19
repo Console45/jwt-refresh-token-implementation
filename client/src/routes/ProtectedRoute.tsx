@@ -5,14 +5,19 @@ import { getAccessToken } from "../acessToken";
 interface ProtectedRouteProps {
   component: any;
   path: string;
+  user: any;
+  loading: boolean;
 }
 
 export const ProtectedRoute: FC<ProtectedRouteProps> = ({
   component: Component,
   path,
+  loading,
+  user,
 }) => {
   const accessToken = getAccessToken();
-  return accessToken ? (
+  if (loading) return <p>loading...</p>;
+  return accessToken && user ? (
     <Route path={path}>
       <Component />
     </Route>
