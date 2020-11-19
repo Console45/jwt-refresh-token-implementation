@@ -15,7 +15,7 @@ interface LoginUserResponse {
 
 export const useLoginUser = (): LoginUserResponse => {
   const loginUser = async (variables: User) => {
-    const { data } = await axios.post("/users/login", variables);
+    const { data } = await axios.post("/user/login", variables);
     return data;
   };
   const [mutate, { isLoading, isError, isSuccess }] = useMutation(loginUser, {
