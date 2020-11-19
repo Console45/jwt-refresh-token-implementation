@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import { NavLink } from "react-router-dom";
-import { useLogoutUser } from "../hooks/useLogout";
-import { useUser } from "../hooks/useUser";
+import { useLogoutUser } from "../hooks/mutation/useLogout";
+import { useUser } from "../hooks/query/useUser";
 
 interface HeaderProps {}
 
