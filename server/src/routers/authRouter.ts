@@ -1,11 +1,60 @@
 import { Response, Request, Router } from "express";
 import { verify } from "jsonwebtoken";
+import { OAuth2Client } from "google-auth-library";
 import User, { IUser } from "../database/models/User";
 import { RevokeToken } from "../utils/revokeToken";
 import { sendRefreshToken } from "../utils/sendRefreshToken";
 // import { sendResetPasswordEmail } from "../emails/account";
 
 export const router: Router = Router();
+const client = new OAuth2Client({
+  clientId: process.env.GOOGLE_CLIENT_ID,
+  forceRefreshOnFailure: true,
+});
+router.post("/google_login", async ({ body }: Request, res: Response) => {
+  const idToken = body.idToken;
+  try {
+    const loginTicket = await client.verifyIdToken({
+      idToken,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+    const tokenPayload = loginTicket.getPayload();
+    if (!tokenPayload)
+      return res.status(409).send({ success: false, error: "Invalid token" });
+    if (!tokenPayload.email_verified)
+      return res
+        .status(404)
+        .send({ success: false, error: "Email not verified" });
+    const user: IUser | null = await User.findOne({
+      email: tokenPayload.email,
+    });
+    if (!user) {
+      const genPassword: string = tokenPayload.sub;
+      const newUser: IUser = new User({
+        email: tokenPayload.email,
+        password: genPassword,
+        name: tokenPayload.name,
+      });
+      await newUser.save();
+      sendRefreshToken(res, newUser.createRefreshToken());
+      const accessToken = await newUser.createAccessToken();
+      return res.status(201).send({
+        login: true,
+        user,
+        accessToken,
+      });
+    }
+    sendRefreshToken(res, user.createRefreshToken());
+    const accessToken = await user.createAccessToken();
+    return res.send({
+      login: true,
+      user,
+      accessToken,
+    });
+  } catch (err) {
+    res.status(400).send({ success: false, error: "Google Login failed" });
+  }
+});
 
 router.post("/refresh_token", async (req: any, res: Response) => {
   const token: string = req.cookies.jid;
