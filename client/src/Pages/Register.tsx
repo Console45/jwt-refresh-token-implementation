@@ -1,5 +1,5 @@
 import React, { FC, useState } from "react";
-import { useCreateUser } from "../hooks/useCreateUser";
+import { useCreateUser } from "../hooks/mutation/useCreateUser";
 
 interface RegisterProps {}
 

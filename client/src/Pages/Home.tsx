@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { useUsers } from "../hooks/useUsers";
+import { useUsers } from "../hooks/query/useUsers";
 
 export const Home: FC<{}> = () => {
   interface User {
