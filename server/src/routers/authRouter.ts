@@ -1,6 +1,6 @@
 import { Response, Request, Router } from "express";
 import { verify } from "jsonwebtoken";
-import { OAuth2Client } from "google-auth-library";
+import { LoginTicket, OAuth2Client, TokenPayload } from "google-auth-library";
 import User, { IUser } from "../database/models/User";
 import { RevokeToken } from "../utils/revokeToken";
 import { sendRefreshToken } from "../utils/sendRefreshToken";
@@ -12,13 +12,13 @@ const client = new OAuth2Client({
   forceRefreshOnFailure: true,
 });
 router.post("/google_login", async ({ body }: Request, res: Response) => {
-  const idToken = body.idToken;
   try {
-    const loginTicket = await client.verifyIdToken({
+    const idToken: string = body.idToken;
+    const loginTicket: LoginTicket = await client.verifyIdToken({
       idToken,
       audience: process.env.GOOGLE_CLIENT_ID,
     });
-    const tokenPayload = loginTicket.getPayload();
+    const tokenPayload: TokenPayload | undefined = loginTicket.getPayload();
     if (!tokenPayload)
       return res.status(409).send({ success: false, error: "Invalid token" });
     if (!tokenPayload.email_verified)
@@ -71,7 +71,7 @@ router.post("/refresh_token", async (req: any, res: Response) => {
     return res.status(403).send({ ok: false, accessToken: "" });
 
   sendRefreshToken(res, user.createRefreshToken());
-  const accessToken = await user.createAccessToken();
+  const accessToken: string = await user.createAccessToken();
   req.accessToken = accessToken;
   return res.send({ ok: true, accessToken });
 });

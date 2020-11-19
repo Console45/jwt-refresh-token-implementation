@@ -14,7 +14,7 @@ router.post("/user/register", async ({ body }: Request, res: Response) => {
     const user: IUser = new User(body);
     await user.save();
     sendRefreshToken(res, user.createRefreshToken());
-    const accessToken = await user.createAccessToken();
+    const accessToken: string = await user.createAccessToken();
     res.status(201).send({
       register: true,
       user,
@@ -29,7 +29,7 @@ router.post("/user/login", async ({ body }: Request, res: Response) => {
   try {
     const user: IUser = await User.findByCredentials(body.email, body.password);
     sendRefreshToken(res, user.createRefreshToken());
-    const accessToken = await user.createAccessToken();
+    const accessToken: string = await user.createAccessToken();
     res.send({
       login: true,
       user,
