@@ -1,3 +1,4 @@
+import { useHistory } from "react-router-dom";
 import { setAccessToken } from "./../acessToken";
 import axios from "axios";
 import { MutationFunction, queryCache, useMutation } from "react-query";
@@ -14,6 +15,7 @@ interface LoginUserResponse {
 }
 
 export const useLoginUser = (): LoginUserResponse => {
+  const { push } = useHistory();
   const loginUser = async (variables: User) => {
     const { data } = await axios.post("/user/login", variables);
     return data;
@@ -22,6 +24,7 @@ export const useLoginUser = (): LoginUserResponse => {
     onSuccess: ({ accessToken }) => {
       setAccessToken(accessToken);
       queryCache.invalidateQueries("user");
+      push("/user");
     },
   });
 
