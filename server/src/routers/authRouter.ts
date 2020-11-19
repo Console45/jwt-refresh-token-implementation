@@ -43,9 +43,11 @@ router.post("/forgot_password", async ({ body }: Request, res: Response) => {
 });
 
 router.post(
-  "/reset-password/:token",
-  async ({ body, params }: Request, res: Response) => {
-    const token: string = params.token;
+  "/reset-password",
+  async ({ body, query }: Request, res: Response) => {
+    const token: string = query.token as string;
+    if (!token)
+      return res.status(409).send({ success: false, error: "Invalid token" });
     try {
       const payload: any = verify(
         token,
@@ -55,11 +57,11 @@ router.post(
       if (!user)
         return res
           .status(404)
-          .send({ success: "false", error: "Account does not exist" });
+          .send({ success: false, error: "Account does not exist" });
       if (user.resetPasswordTokenVersion !== payload.tokenVersion)
         return res
           .status(409)
-          .send({ success: "false", error: "Link has expired" });
+          .send({ success: false, error: "Token has expired" });
       user.password = body.password;
       await user.save();
       const revoke = new RevokeToken(user._id);
@@ -70,9 +72,9 @@ router.post(
       if (err.message === "jwt expired")
         return res
           .status(409)
-          .send({ success: "false", error: "Link has expired" });
+          .send({ success: false, error: "Token has expired" });
 
-      res.status(500).send({ success: "false", error: err.message });
+      res.status(500).send({ success: false, error: err.message });
     }
   }
 );
