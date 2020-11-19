@@ -1,5 +1,5 @@
 import { useHistory } from "react-router-dom";
-import { setAccessToken } from "./../acessToken";
+import { setAccessToken } from "../../acessToken";
 import axios from "axios";
 import { MutationFunction, queryCache, useMutation } from "react-query";
 
