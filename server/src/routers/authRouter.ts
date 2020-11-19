@@ -19,12 +19,8 @@ router.post("/google_login", async ({ body }: Request, res: Response) => {
       audience: process.env.GOOGLE_CLIENT_ID,
     });
     const tokenPayload: TokenPayload | undefined = loginTicket.getPayload();
-    if (!tokenPayload)
-      return res.status(409).send({ success: false, error: "Invalid token" });
-    if (!tokenPayload.email_verified)
-      return res
-        .status(404)
-        .send({ success: false, error: "Email not verified" });
+    if (!tokenPayload) throw new Error();
+    if (!tokenPayload.email_verified) throw new Error();
     const user: IUser | null = await User.findOne({
       email: tokenPayload.email,
     });
