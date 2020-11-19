@@ -16,6 +16,7 @@ export const App: FC<AppProps> = () => {
         setLoading(false);
       } catch (err) {
         setLoading(false);
+        return;
       }
     };
     refreshToken();
