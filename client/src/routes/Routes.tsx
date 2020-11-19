@@ -1,10 +1,10 @@
 import React, { FC } from "react";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import { Header } from "../components/Header";
-import { Home } from "../pages/Home";
-import { Login } from "../pages/Login";
-import { Profile } from "../pages/Profile";
-import { Register } from "../pages/Register";
+import { Home } from "../Pages/Home";
+import { Login } from "../Pages/Login";
+import { Profile } from "../Pages/Profile";
+import { Register } from "../Pages/Register";
 import { ProtectedRoute } from "./ProtectedRoute";
 
 export const Routes: FC = () => {
