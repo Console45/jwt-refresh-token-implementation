@@ -41,6 +41,7 @@ const userSchema: Schema<IUser> = new Schema<IUser>({
     trim: true,
     required: true,
     enum: ["User", "Admin"],
+    default: "User",
   },
   accessTokens: [
     {
