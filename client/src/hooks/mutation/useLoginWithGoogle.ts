@@ -1,14 +1,14 @@
 import { useHistory } from "react-router-dom";
 import { setAccessToken } from "../../acessToken";
 import axios from "axios";
-import { MutationFunction, queryCache, useMutation } from "react-query";
+import { queryCache, useMutation } from "react-query";
 
 type IdToken = string;
 interface LoginWithGoogleResponse {
   error: boolean;
   success: boolean;
   loading: boolean;
-  mutate: MutationFunction<any, IdToken>;
+  sendGoogleResponse: (response: any) => Promise<void>;
 }
 
 export const useLoginWithGoogle = (): LoginWithGoogleResponse => {
@@ -27,11 +27,13 @@ export const useLoginWithGoogle = (): LoginWithGoogleResponse => {
       },
     }
   );
-
+  const sendGoogleResponse = async (response: any): Promise<void> => {
+    await mutate(response.tokenId);
+  };
   return {
     error: isError,
     success: isSuccess,
     loading: isLoading,
-    mutate,
+    sendGoogleResponse,
   };
 };
