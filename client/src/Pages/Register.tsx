@@ -1,5 +1,4 @@
-import React, { FC, useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import React, { FC, useState } from "react";
 import { useCreateUser } from "../hooks/useCreateUser";
 
 interface RegisterProps {}
@@ -8,19 +7,13 @@ export const Register: FC<RegisterProps> = () => {
   const [email, setEmail] = useState<string>("");
   const [name, setName] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const { mutate, error, loading, success } = useCreateUser();
-
-  const history = useHistory();
-
-  useEffect(() => {
-    if (success) history.push("/user");
-  }, [success, history]);
+  const { mutate, error, loading } = useCreateUser();
 
   return (
     <div>
       Register Page
       <form
-        onSubmit={async (e) => {
+        onSubmit={async e => {
           e.preventDefault();
           await mutate({ name, email, password });
         }}
@@ -32,7 +25,7 @@ export const Register: FC<RegisterProps> = () => {
             type="text"
             value={name}
             placeholder="name"
-            onChange={(e) => setName(e.target.value)}
+            onChange={e => setName(e.target.value)}
           />
         </div>
         <div>
@@ -40,7 +33,7 @@ export const Register: FC<RegisterProps> = () => {
             type="email"
             value={email}
             placeholder="email"
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={e => setEmail(e.target.value)}
           />
         </div>
         <div>
@@ -48,7 +41,7 @@ export const Register: FC<RegisterProps> = () => {
             type="password"
             value={password}
             placeholder="password"
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={e => setPassword(e.target.value)}
           />
         </div>
         <button disabled={loading}>{loading ? "loading.." : "submit"}</button>
