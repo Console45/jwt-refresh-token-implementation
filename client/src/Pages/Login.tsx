@@ -10,11 +10,10 @@ export const Login: FC<LoginProps> = () => {
   const [password, setPassword] = useState<string>("");
   const { mutate, error, loading } = useLoginUser();
   const {
-    mutate: mutateGoogleLogin,
+    sendGoogleResponse,
     loading: googleLoginLoading,
     error: googleLoginError,
   } = useLoginWithGoogle();
-
   return (
     <div>
       Login Page
@@ -48,8 +47,8 @@ export const Login: FC<LoginProps> = () => {
         <GoogleLogin
           clientId="51739444378-2nbiksb4bcncqin768uaqk71gh4toh26.apps.googleusercontent.com"
           buttonText={`${googleLoginLoading ? "Loading..." : "Login"}`}
-          onSuccess={(response: any) => mutateGoogleLogin(response.tokenId)}
-          onFailure={(response: any) => mutateGoogleLogin(response.tokenId)}
+          onSuccess={sendGoogleResponse}
+          onFailure={sendGoogleResponse}
           cookiePolicy={"single_host_origin"}
         />
       </div>
