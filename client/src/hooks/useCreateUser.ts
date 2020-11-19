@@ -17,7 +17,7 @@ interface CreateUserResponse {
 
 export const useCreateUser = (): CreateUserResponse => {
   const createUser = async (variables: NewUser) => {
-    const { data } = await axios.post("/users", variables);
+    const { data } = await axios.post("/user/register", variables);
     return data;
   };
 
