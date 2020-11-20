@@ -7,7 +7,7 @@ interface UseUserResponse {
   loading: boolean;
 }
 export const useUser = (): UseUserResponse => {
-  const fetchUser = async (key: string) => {
+  const fetchUser = async (key: string): Promise<any> => {
     try {
       const res = await axios.get("/user/me");
       return res.data;

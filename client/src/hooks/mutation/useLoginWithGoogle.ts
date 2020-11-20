@@ -13,7 +13,7 @@ interface LoginWithGoogleResponse {
 
 export const useLoginWithGoogle = (): LoginWithGoogleResponse => {
   const { push } = useHistory();
-  const loginWithGoogle = async (idToken: IdToken) => {
+  const loginWithGoogle = async (idToken: IdToken): Promise<any> => {
     const { data } = await axios.post("/google_login", { idToken });
     return data;
   };

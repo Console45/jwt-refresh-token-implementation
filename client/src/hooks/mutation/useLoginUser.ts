@@ -9,18 +9,17 @@ interface User {
 }
 interface LoginUserResponse {
   error: boolean;
-  success: boolean;
   loading: boolean;
   mutate: MutationFunction<any, User>;
 }
 
 export const useLoginUser = (): LoginUserResponse => {
   const { push } = useHistory();
-  const loginUser = async (variables: User) => {
+  const loginUser = async (variables: User): Promise<any> => {
     const { data } = await axios.post("/user/login", variables);
     return data;
   };
-  const [mutate, { isLoading, isError, isSuccess }] = useMutation(loginUser, {
+  const [mutate, { isLoading, isError }] = useMutation(loginUser, {
     onSuccess: ({ accessToken }) => {
       setAccessToken(accessToken);
       queryCache.invalidateQueries("user");
@@ -30,7 +29,6 @@ export const useLoginUser = (): LoginUserResponse => {
 
   return {
     error: isError,
-    success: isSuccess,
     loading: isLoading,
     mutate,
   };
