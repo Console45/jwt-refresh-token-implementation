@@ -4,7 +4,7 @@ import axios from "axios";
 import { MutationFunction, queryCache, useMutation } from "react-query";
 
 interface LogoutUserResponse {
-  error: boolean;
+  error: any;
   loading: boolean;
   mutate: MutationFunction<any, any>;
 }
@@ -15,7 +15,7 @@ export const useLogoutUser = (): LogoutUserResponse => {
     const { data } = await axios.post("/user/me/logout");
     return data;
   };
-  const [mutate, { isLoading, isError }] = useMutation(logoutUser, {
+  const [mutate, { isLoading, error }] = useMutation(logoutUser, {
     onSuccess: () => {
       setAccessToken("");
       queryCache.invalidateQueries("user");
@@ -24,7 +24,7 @@ export const useLogoutUser = (): LogoutUserResponse => {
   });
 
   return {
-    error: isError,
+    error: error,
     loading: isLoading,
     mutate,
   };

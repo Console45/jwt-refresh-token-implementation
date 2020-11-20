@@ -10,7 +10,7 @@ interface NewUser {
 }
 
 interface CreateUserResponse {
-  error: boolean;
+  error: any;
   loading: boolean;
   mutate: MutationFunction<any, NewUser>;
 }
@@ -22,7 +22,7 @@ export const useCreateUser = (): CreateUserResponse => {
     return data;
   };
 
-  const [mutate, { isLoading, isError }] = useMutation(createUser, {
+  const [mutate, { isLoading, error }] = useMutation(createUser, {
     onSuccess: ({ accessToken }) => {
       setAccessToken(accessToken);
       queryCache.invalidateQueries("users");
@@ -31,7 +31,7 @@ export const useCreateUser = (): CreateUserResponse => {
   });
 
   return {
-    error: isError,
+    error,
     loading: isLoading,
     mutate,
   };
